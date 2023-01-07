@@ -1,0 +1,126 @@
+<html>
+<head>
+    <title>附近的寵物美容</title>
+    <meta charset="UTF-8"> 
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
+    integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/2447/2447823.png">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/6505e56344.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+</head>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    .big-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .big-container h1{
+        margin: 30px 10px;
+    }
+
+    #map {
+        height: 80%;
+        width: 80%;
+        transform: translateX(13%);
+    }
+</style>
+<body>
+    <div class="big-container">
+        <h1><i class="fa-solid fa-paw" style="color:#ff3399"></i> 附近的寵物美容</h1>
+    </div>
+    <div id="map"></div>
+    
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.bootcss.com/moment.js/2.18.1/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script type="text/javascript">
+        function initMap() {
+            var pyrmont = new google.maps.LatLng(25.046891, 121.516602);
+
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: pyrmont,
+                zoom: 17
+            });
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    const marker = new google.maps.Marker({
+                        map,
+                        position: pos,
+                    });
+
+                    var request = {
+                        keyword: "(動物美容) OR (寵物美容)",
+                        location: pos,
+                        radius: '1000',
+                    };
+                    var service = new google.maps.places.PlacesService(map);
+                    service.nearbySearch(request, callback);
+
+                    map.setZoom(17);
+                    map.setCenter(pos);
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                alert("未允許或遭遇錯誤！");
+            }
+
+            
+
+            function callback(results, status) {
+                if (status == google.maps.places.PlacesServiceStatus.OK) {
+                    console.log(results)
+                    for (var i = 0; i < results.length; i++) {
+                        createMarker(results[i])
+                    }
+                }
+            }
+
+            function createMarker(place) {
+                if (!place.geometry || !place.geometry.location) return;
+
+                const marker = new google.maps.Marker({
+                    map,
+                    position: place.geometry.location,
+                });
+                
+                var placeUrl = "https://www.google.com/maps/place/?q=place_id:" + place.place_id;
+                var contentString = "<h4 style='font-weight: 700;'>" + place.name + "</h4><h5><i style='color:#ff3399' class='fa-solid fa-location-dot'></i> 地址：" +  place.vicinity + "</h5><h5><i style='color:#e8d421' class='fa-solid fa-star'></i> 評價："+ place.rating+"</h5><a href="+ placeUrl + " target='_blank' rel='noopener' style='cursor: pointer; color: rgb(66, 127, 237); text-decoration: none;'>View on Google Maps</a>";
+
+
+                google.maps.event.addListener(marker, "click", () => {
+                    
+                    var infowindow = new google.maps.InfoWindow({content: contentString});
+                    infowindow.open(map, marker);
+                });
+            }
+
+        }
+        window.initMap = initMap;
+    </script>
+    <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8u6y845lcz_iDEKGDg70NdzlJ0tuBz3s&callback=initMap&libraries=places&v=weekly"
+    defer
+  ></script>
+</body>
+</html>
