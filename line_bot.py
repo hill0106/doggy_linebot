@@ -1,4 +1,5 @@
 from application import *
+import line_chatbot_api
 
 def call_dog_Data(item):
     for i in item:
@@ -51,7 +52,7 @@ def call_open_link(event, text, url):
             ]
         )
     )
-    line_bot_api.reply_message(event.reply_token, message)
+    line_chatbot_api.line_bot_api.reply_message(event.reply_token, message)
 
 def show_pet_info(event):
     message = TemplateSendMessage(
@@ -71,7 +72,7 @@ def show_pet_info(event):
             ]
         )
     )
-    line_bot_api.reply_message(event.reply_token, message)
+    line_chatbot_api.line_bot_api.reply_message(event.reply_token, message)
 
 def call_send_liff(event, _id="", userId="", text="", url=""):
     message = FlexSendMessage(
@@ -110,7 +111,7 @@ def call_send_liff(event, _id="", userId="", text="", url=""):
             }
             }
     )
-    line_bot_api.reply_message(event.reply_token, message)
+    line_chatbot_api.line_bot_api.reply_message(event.reply_token, message)
 
 def ShowCarouselItem(event, item):
     contents = dict()
@@ -308,7 +309,7 @@ def ShowCarouselItem(event, item):
         alt_text="Dog Info",
         contents= contents
     )
-    line_bot_api.reply_message(event.reply_token, message)
+    line_chatbot_api.line_bot_api.reply_message(event.reply_token, message)
 
 def translate(i):
     if i=='male':
@@ -335,4 +336,4 @@ def DeleteConfirm(event, petId, petName):
             ]
         )
     )
-    line_bot_api.reply_message(event.reply_token, confirm_template_message)
+    line_chatbot_api.line_bot_api.reply_message(event.reply_token, confirm_template_message)
