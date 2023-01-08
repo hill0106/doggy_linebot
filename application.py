@@ -19,7 +19,7 @@ import uuid
 from werkzeug.utils import secure_filename
 from line_bot import *
 from azure_blob import *
-from line_chatbot_api import *
+import line_chatbot_api 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -151,7 +151,7 @@ def callback():
 
     # handle webhook body
     try:
-        handler.handle(body, signature)
+        line_chatbot_api.handler.handle(body, signature)
     except InvalidSignatureError:
         print("Invalid signature. Please check your channel access token/channel secret.")
         abort(400)
@@ -159,17 +159,17 @@ def callback():
 
 
 
-@handler.add(PostbackEvent)
+@line_chatbot_api.handler.add(PostbackEvent)
 def handle_postback(event):
     user_id = event.source.user_id
     postback_data = dict(parse_qsl(event.postback.data))
     if postback_data.get('action')=='delete':
         if deletePet(user_id, postback_data.get('petId')):
             deleteImage(postback_data.get('petId'))
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "刪除成功"))
+            line_chatbot_api.line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "刪除成功"))
 
         else:
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "無法刪除，請稍後再試"))
+            line_chatbot_api.line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "無法刪除，請稍後再試"))
     elif postback_data.get('action')=='passDelete':
         petId = postback_data.get('petId')
         petName = postback_data.get('petName')
@@ -179,10 +179,9 @@ def handle_postback(event):
         petName = postback_data.get('petName')
         call_send_liff(event, _id=petId, userId=user_id, text="編輯"+petName, url="https://liff.line.me/1657798815-EoY1x9KN?itemId={}?userId={}".format(petId, user_id))
 
-@handler.add(MessageEvent)
+@line_chatbot_api.handler.add(MessageEvent)
 def handle_something(event):
     user_id = event.source.user_id
-    user_name = line_bot_api.get_profile(user_id).display_name
     if event.message.type=='text':
         receive_text=event.message.text
         if '狗狗基本資訊' in receive_text:
@@ -195,7 +194,7 @@ def handle_something(event):
                 else:
                     call_send_liff(event=event, text="目前資料庫超過十二樣，請您到以下網頁查看", url="https://liff.line.me/1657798815-vRKaEGrn")
             else:
-                line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "目前沒有寵物資訊"))
+                line_chatbot_api.line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "目前沒有寵物資訊"))
         elif '新增狗狗基本資料' in receive_text:
             call_send_liff(event=event, text="新增狗狗基本資料", url="https://liff.line.me/1657798815-ExLXzO2y")
         elif '附近寵物美容' in receive_text:
@@ -207,7 +206,7 @@ def handle_something(event):
         elif '狗狗百科' in receive_text:
             call_open_link(event, '狗狗百科', web+"/dic")
         else:
-            line_bot_api.reply_message(
+            line_chatbot_api.line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="無法辨識的指令，請重新輸入..."))
 
 def is_allowed_file(filename):
