@@ -19,6 +19,7 @@ import uuid
 from werkzeug.utils import secure_filename
 from line_bot import *
 from azure_blob import *
+from line_chatbot_api import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -26,9 +27,6 @@ app.config["UPLOAD_FOLDER"] = "static/images/"
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-
-line_bot_api = LineBotApi('Ujy55gQnq+VJ4hxrbgTGgK8RSvYiHmFKgIQ/Qku9P1QRASa6TxiInCi9lRT0Er/K9jHa5xu0o/5kxxfpYUufmEmwLeoo8CWJRYc62APITkVKrThOtVnX8QRCMMeTPcjkFxOVOqUBLb7tL1k2LjkK4AdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('5bcba98158a399ea72911c72162da036')
 
 web = "https://doggylinebot.azurewebsites.net"
 
