@@ -39,7 +39,7 @@
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">生日</label>
                 <div class="input-group date" id='date1'>
-                    <input type="text" class="form-control" name="petBirthDate" id="petBirthDate" />
+                    <input type="text" class="form-control" name="petBirthDate" id="petBirthDate" required/>
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </span>
@@ -141,6 +141,7 @@
                 date:null,
                 format: 'YYYY-MM-DD',
                 locale: moment.locale('zh-tw'),
+                defaultDate: moment(),
             });
             
         });
