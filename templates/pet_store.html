@@ -72,12 +72,12 @@
                     var request = {
                         keyword: "(動物美容) OR (寵物美容)",
                         location: pos,
-                        radius: '1000',
+                        radius: '2000',
                     };
                     var service = new google.maps.places.PlacesService(map);
                     service.nearbySearch(request, callback);
 
-                    map.setZoom(17);
+                    map.setZoom(13);
                     map.setCenter(pos);
                 });
             } else {
