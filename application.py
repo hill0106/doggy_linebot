@@ -89,6 +89,10 @@ def receiveAddPet():
         petNumber = request.form['petNumber']  
         _id = str(uuid.uuid1())
         file = request.files['file']
+        if not birthDate or not type or not petNumber:
+            birthDate=" "
+            type=" "
+            petNumber=" "
         if file and is_allowed_file(file.filename):
             filename = _id + '.jpeg'
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
