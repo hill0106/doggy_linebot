@@ -13,11 +13,12 @@ from linebot.models import (
     PostbackEvent, ConfirmTemplate, CarouselTemplate, CarouselColumn,
     ImageCarouselTemplate, ImageCarouselColumn, FlexSendMessage
 )
-from yolov5 import *
+
 from dynamoDB import *
 import uuid
 from werkzeug.utils import secure_filename
 from line_bot import *
+from azure_blob import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
@@ -29,8 +30,7 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 line_bot_api = LineBotApi('Ujy55gQnq+VJ4hxrbgTGgK8RSvYiHmFKgIQ/Qku9P1QRASa6TxiInCi9lRT0Er/K9jHa5xu0o/5kxxfpYUufmEmwLeoo8CWJRYc62APITkVKrThOtVnX8QRCMMeTPcjkFxOVOqUBLb7tL1k2LjkK4AdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('5bcba98158a399ea72911c72162da036')
 
-web = "https://b9d8-114-43-33-129.ngrok.io"
-# "https://doggylinebot.azurewebsites.net"
+web = "https://doggylinebot.azurewebsites.net"
 
 @app.route("/dic", methods=['POST', 'GET'])
 def dic():
@@ -66,9 +66,6 @@ def petStore():
 def shelter():
     return render_template('pet_shelter.html')
 
-@app.route("/type", methods=['POST', 'GET'])
-def type():
-    return render_template('type.html')
 
 @app.route("/addPet", methods=['POST', 'GET']) 
 def addPet():
@@ -116,29 +113,6 @@ def receiveParams():
 
     return jsonify(item)
 
-@app.route('/predict', methods=['POST'])
-def predict():
-
-    file = request.files['file']
-    _id = str(uuid.uuid1())
-    if file and is_allowed_file(file.filename):
-        filename = _id + '_result.jpeg'
-        path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(path)
-        if detect(path)!= False:
-            type = detect(path)
-            os.remove(path)
-            url = uploadImage('static/result.jpeg', filename)
-            item = ShowDogType(type)
-            for i in item:
-                info = i['info'].split('\n')
-                i['info'] = info
-            return render_template('prediction.html', imgURL=url, item=item)
-        else:
-            os.remove(path)
-            return '<h1 style="display: flex; justify-content: center; align-items: center; font-size: 3rem">不好意思，辨識不出狗狗的品種</h1>'
-    else:
-        return redirect(url_for('index'))
 
 @app.route('/edited', methods = ['GET', 'POST'])
 def edited():
@@ -234,9 +208,6 @@ def handle_something(event):
             call_open_link(event, '附近動物醫院', web+"/hospital")
         elif '狗狗百科' in receive_text:
             call_open_link(event, '狗狗百科', web+"/dic")
-        elif '辨識狗狗品種' in receive_text:
-            call_open_link(event, '辨識狗狗品種', web+"/type")
-            # line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "請拍一張或上傳含有狗狗的圖片"))
         else:
             line_bot_api.reply_message(
                 event.reply_token, TextSendMessage(text="無法辨識的指令，請重新輸入..."))
