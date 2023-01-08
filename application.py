@@ -89,7 +89,7 @@ def receiveAddPet():
         petNumber = request.form['petNumber']  
         _id = str(uuid.uuid1())
         file = request.files['file']
-        if not birthDate or not type or not petNumber:
+        if birthDate=="" or type=="" or petNumber=="":
             birthDate=" "
             type=" "
             petNumber=" "
