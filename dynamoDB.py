@@ -28,6 +28,7 @@ def insert(items):
 #[userId, _id, name, birthDate, sex, petNumber, type, imgUrl]
 def insertPet(items):
     try:
+        # if items[3]=="" or items[5]=="" or items[6]==""
         table = dynamodb.Table('pet_info')
         table.put_item(
             Item = {
