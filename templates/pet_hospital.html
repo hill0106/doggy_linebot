@@ -73,13 +73,13 @@
                     var request = {
                         keyword: "(動物醫院) OR (寵物醫院)",
                         location: pos,
-                        radius: '1000',
+                        radius: '2000',
                         type: ['veterinary_care']
                     };
                     var service = new google.maps.places.PlacesService(map);
                     service.nearbySearch(request, callback);
 
-                    map.setZoom(17);
+                    map.setZoom(13);
                     map.setCenter(pos);
                 });
             } else {

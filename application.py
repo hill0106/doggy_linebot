@@ -29,6 +29,8 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 line_bot_api = LineBotApi('Ujy55gQnq+VJ4hxrbgTGgK8RSvYiHmFKgIQ/Qku9P1QRASa6TxiInCi9lRT0Er/K9jHa5xu0o/5kxxfpYUufmEmwLeoo8CWJRYc62APITkVKrThOtVnX8QRCMMeTPcjkFxOVOqUBLb7tL1k2LjkK4AdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('5bcba98158a399ea72911c72162da036')
 
+web = "https://doggylinebot.azurewebsites.net"
+
 @app.route("/dic", methods=['POST', 'GET'])
 def dic():
     item = ShowAll()
@@ -36,6 +38,16 @@ def dic():
         info = i['info'].split('\n')
         i['info'] = info
     return render_template('dic.html', item = item)
+
+@app.route("/dogInfo", methods=['POST', 'GET'])
+def dogInfo():
+    return render_template('all_dog_info.html')
+
+@app.route("/sendDogInfo", methods=['POST', 'GET'])
+def sendDogInfo():
+    userId = session.get('userId', None)
+    item = ShowAllPet(userId)
+    return jsonify(item)
 
 @app.route("/hospital", methods=['POST', 'GET'])
 def hospital():
@@ -83,7 +95,6 @@ def receiveAddPet():
             file.save(path)
         imgUrl = uploadImage(path, filename)
         pet = [userId, _id, name, birthDate, sex, petNumber, type, imgUrl] # save to DB
-        app.logger.info(pet)
         insertPet(pet)
         session.clear()
     return '<h1 style="display: flex; justify-content: center; align-items: center; font-size: 3rem">已新增資料，您可以關閉畫面了</h1>'
@@ -118,8 +129,10 @@ def edited():
             filename = _id + '.jpeg'
             path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             file.save(path)
-        imgUrl = uploadImage(path, filename)
-        deleteImage(oldid)
+            imgUrl = uploadImage(path, filename)
+            deleteImage(oldid)
+        else:
+            imgUrl = "https://1111ainutrition.blob.core.windows.net/dog/" + oldid + ".jpeg"
         pet = [userId, oldid, name, birthDate, sex, petNumber, type, imgUrl] # save to DB
         
         updatePet(pet)
@@ -151,7 +164,6 @@ def handle_postback(event):
     user_id = event.source.user_id
     postback_data = dict(parse_qsl(event.postback.data))
     if postback_data.get('action')=='delete':
-        app.logger.info(postback_data.get('petId'))
         if deletePet(user_id, postback_data.get('petId')):
             deleteImage(postback_data.get('petId'))
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "刪除成功"))
@@ -165,7 +177,6 @@ def handle_postback(event):
     elif postback_data.get('action')=='passEdit':
         petId = postback_data.get('petId')
         petName = postback_data.get('petName')
-        app.logger.info(petId, petName)
         call_send_liff(event, _id=petId, userId=user_id, text="編輯"+petName, url="https://liff.line.me/1657798815-EoY1x9KN?itemId={}?userId={}".format(petId, user_id))
 
 @handler.add(MessageEvent)
@@ -178,25 +189,23 @@ def handle_something(event):
             show_pet_info(event)
         elif '查詢狗狗基本資料' in receive_text:
             item = ShowAllPet(user_id)
-            app.logger.info(item)
             if item != []:
                 if len(item) < 12:
                     ShowCarouselItem(event, item)
                 else:
-                    pass
-                    # call_send_liff(event=event, text="目前資料庫超過十二樣，請您到以下網頁查看", url="https://doggylinebot.azurewebsites.net/dic")
+                    call_send_liff(event=event, text="目前資料庫超過十二樣，請您到以下網頁查看", url="https://liff.line.me/1657798815-vRKaEGrn")
             else:
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "目前沒有寵物資訊"))
         elif '新增狗狗基本資料' in receive_text:
             call_send_liff(event=event, text="新增狗狗基本資料", url="https://liff.line.me/1657798815-ExLXzO2y")
         elif '附近寵物美容' in receive_text:
-            call_open_link(event, '附近寵物美容', "https://doggylinebot.azurewebsites.net/petStore")
+            call_open_link(event, '附近寵物美容', web+"/petStore")
         elif '附近動物收容所' in receive_text:
-            call_open_link(event, '附近動物收容所', "https://doggylinebot.azurewebsites.net/shelter")
+            call_open_link(event, '附近動物收容所', web+"/shelter")
         elif '附近動物醫院' in receive_text:
-            call_open_link(event, '附近動物醫院', "https://doggylinebot.azurewebsites.net/hospital")
+            call_open_link(event, '附近動物醫院', web+"/hospital")
         elif '狗狗百科' in receive_text:
-            call_open_link(event, '狗狗百科', "https://doggylinebot.azurewebsites.net/dic")
+            call_open_link(event, '狗狗百科', web+"/dic")
         elif '辨識狗狗品種' in receive_text:
             line_bot_api.reply_message(event.reply_token, TextSendMessage(text = "請拍一張或上傳含有狗狗的圖片"))
         else:

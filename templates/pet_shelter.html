@@ -72,12 +72,12 @@
                     var request = {
                         keyword: "收容所",
                         location: pos,
-                        radius: '1000',
+                        radius: '10000',
                     };
                     var service = new google.maps.places.PlacesService(map);
                     service.nearbySearch(request, callback);
 
-                    map.setZoom(17);
+                    map.setZoom(13);
                     map.setCenter(pos);
                 });
             } else {
