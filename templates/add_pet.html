@@ -39,7 +39,7 @@
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">生日</label>
                 <div class="input-group date" id='date1'>
-                    <input type="text" class="form-control" name="petBirthDate" id="petBirthDate" required/>
+                    <input type="text" class="form-control" name="petBirthDate" id="petBirthDate" />
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-calendar"></i>
                     </span>
@@ -47,10 +47,10 @@
             </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label">性別</label>
-                <select class="form-select" aria-label="Default select example" name="petSex" id="petSex" required>
+                <select class="form-select" aria-label="Default select example" name="petSex" id="petSex" >
                     <option value="male">男</option>
                     <option value="female">女</option>
-                    <option value="unknown">未知</option>
+                    <option value="female">未知</option>
                 </select>
             </div>
             <div class="mb-3">
@@ -141,7 +141,7 @@
                 date:null,
                 format: 'YYYY-MM-DD',
                 locale: moment.locale('zh-tw'),
-                defaultDate: moment(),
+                default: moment()
             });
             
         });
