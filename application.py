@@ -30,8 +30,8 @@ ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 #TODO change ngrok
 web = "https://5ca2-114-43-33-129.ngrok.io" 
 
-line_bot_api = LineBotApi('HDU0Jl+k3mtjgWDhLHcionOQKZJ+w9qA4dOc3ZIJ9MWZhjV7OQtO4/k0GxNgKtdGnl6yFqNjftOMJV5tiqW5gH/+pOUjmfCIpqhb8m/UPV9fBIEhAMFwBkO3Hsyox5hvO4rrYfDE3bkgg5X0YlPQhgdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('d4efd950f90ad6075ec33cf8b6f153e2')
+line_bot_api = LineBotApi('lGZbce+6yAPMFRFC8CzxljUBQhIh5xZUplA+ATJEx110zqLszDEVNlotC/LzdcMP9jHa5xu0o/5kxxfpYUufmEmwLeoo8CWJRYc62APITkW2M2lpkeZQHXUmk9WE7LRAnc4wfWCKSPGZIIF8y1Nt1QdB04t89/1O/w1cDnyilFU=')
+handler = WebhookHandler('5bcba98158a399ea72911c72162da036')
 
 @app.route("/dic", methods=['POST', 'GET'])
 def dic():
@@ -258,5 +258,5 @@ def is_allowed_file(filename):
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
         
-# if __name__ == "__main__":
-#     app.run(host='127.0.0.1', port=5000, debug=True)
+if __name__ == "__main__":
+    app.run(host='127.0.0.1', port=5000, debug=True)
