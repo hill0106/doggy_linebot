@@ -28,7 +28,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
 
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
 #TODO change ngrok
-web = "https://5ca2-114-43-33-129.ngrok.io" 
+web = "https://doggylinebot.azurewebsites.net"
 
 line_bot_api = LineBotApi('lGZbce+6yAPMFRFC8CzxljUBQhIh5xZUplA+ATJEx110zqLszDEVNlotC/LzdcMP9jHa5xu0o/5kxxfpYUufmEmwLeoo8CWJRYc62APITkW2M2lpkeZQHXUmk9WE7LRAnc4wfWCKSPGZIIF8y1Nt1QdB04t89/1O/w1cDnyilFU=')
 handler = WebhookHandler('5bcba98158a399ea72911c72162da036')
