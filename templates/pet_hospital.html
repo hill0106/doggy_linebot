@@ -3,7 +3,6 @@
     <title>附近的寵物醫院</title>
     <meta charset="UTF-8"> 
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" 
     integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
@@ -78,27 +77,25 @@
                     });
 
                     var request = {
-                        keyword: "(動物醫院) OR (寵物醫院)",
                         location: pos,
                         radius: '2000',
-                        type: ['veterinary_care']
+                        keyword: "動物醫院"
                     };
                     var service = new google.maps.places.PlacesService(map);
                     service.nearbySearch(request, callback);
-
-                    map.setZoom(13);
+                    map.setZoom(15);
                     map.setCenter(pos);
                 });
             } else {
                 // Browser doesn't support Geolocation
-                alert("未允許或遭遇錯誤！");
+                window.alert("未允許或遭遇錯誤！");
             }
 
             
 
             function callback(results, status) {
                 if (status == google.maps.places.PlacesServiceStatus.OK) {
-                    console.log(results)
+                    console.log(results);
                     for (var i = 0; i < results.length; i++) {
                         createMarker(results[i])
                     }
@@ -128,7 +125,7 @@
         window.initMap = initMap;
     </script>
     <script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8u6y845lcz_iDEKGDg70NdzlJ0tuBz3s&callback=initMap&libraries=places&v=weekly"
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8u6y845lcz_iDEKGDg70NdzlJ0tuBz3s&callback=initMap&libraries=places"
     defer
   ></script>
 </body>
